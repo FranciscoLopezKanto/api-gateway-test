@@ -1,0 +1,6 @@
+npm install @nestjs/config
+npm install amqplib amqp-connection-manager class-validator class-transformer @nestjs/microservices
+npm install @nestjs/swagger
+npm install swagger-ui-express
+npm install passport-jwt @nestjs/jwt
+npm install passport-local passport @nestjs/passport
