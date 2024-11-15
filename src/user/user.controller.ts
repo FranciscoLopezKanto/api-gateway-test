@@ -13,7 +13,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 @Controller('api/v2/user')
 export class UserController {
     constructor(private readonly clientProxy: ClientProxyTest) {}
-    private _clientProxyUser = this.clientProxy.clientProxyUsers();
+    private _clientProxyUser = this.clientProxy.clientProxy("user");
   
     @Post()
     create(@Body() userDTO: UserDTO): Observable<IUser> {
