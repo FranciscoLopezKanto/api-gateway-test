@@ -12,7 +12,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  private _clientProxyUser = this.clientProxy.clientProxyUsers();
+  private _clientProxyUser = this.clientProxy.clientProxy("users");
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this._clientProxyUser
       .send(UserMSG.VALID_USER, {

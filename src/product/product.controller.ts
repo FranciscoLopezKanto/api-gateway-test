@@ -1,18 +1,19 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
 import { Observable } from 'rxjs';
-import { ClientProxy } from '@nestjs/microservices';
 import { ProductMSG } from 'src/common/constants';
+import { ClientProxyTest } from 'src/common/proxy/client-proxy';
 
 @Controller('product')
 export class ProductController {
-  constructor(private readonly _clientProxyProduct: ClientProxy) {}
+  constructor(private readonly clientProxy: ClientProxyTest) {}
+
+  private _clientProxyProduct = this.clientProxy.clientProxy("product");
 
   // Crear un Producto
   @Post()
   create(@Body() productDTO: { name: string }): Observable<any> {
-    return this._clientProxyProduct.send(ProductMSG.CREATE_PRODUCT, productDTO.name);
-  }
-
+  return this._clientProxyProduct.send(ProductMSG.CREATE_PRODUCT, productDTO);
+  } 
   // Obtener todos los Productos
   @Get()
   findAll(): Observable<any> {

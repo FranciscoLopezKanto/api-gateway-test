@@ -6,15 +6,14 @@ import { ConfigService } from '@nestjs/config';
 export class ClientProxyTest {
   constructor(private configService: ConfigService) {}
 
-  // Configura el cliente proxy para un servicio dado (productos o cualquier otro)
   clientProxy(queueName: string) {
     return ClientProxyFactory.create({
       transport: Transport.RMQ,
       options: {
-        urls: this.configService.get('AMQP_URL'),
-        queue: queueName,  // Nombre de la cola
+        urls: [this.configService.get<string>('AMQP_URL')], // Cargar la URL desde .env
+        queue: queueName,
         queueOptions: {
-          durable: false,  // Definir si la cola es durable
+          durable: true, // Las colas en CloudAMQP deben ser durables
         },
       },
     });
