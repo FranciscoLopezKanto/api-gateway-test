@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Put, Delete, Body, Param } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { ProductMSG } from 'src/common/constants';
 import { ClientProxyTest } from 'src/common/proxy/client-proxy';
 
@@ -12,7 +12,22 @@ export class ProductController {
   // Crear un Producto
   @Post()
   create(@Body() productDTO: { name: string }): Observable<any> {
-  return this._clientProxyProduct.send(ProductMSG.CREATE_PRODUCT, productDTO);
+  return this._clientProxyProduct.send(ProductMSG.CREATE_PRODUCT, productDTO).pipe(
+    map((response) => {
+      // Decodificar el campo 'data' que está en base64
+      const decodedData = Buffer.from(response.data, 'base64').toString('utf-8');
+      
+      // Parsear la data decodificada de nuevo a un objeto JSON
+      const product = JSON.parse(decodedData);
+
+      // Retornar la respuesta con los datos decodificados
+      return {
+        success: response.success,
+        message: response.message,
+        data: product, // El objeto del producto ya decodificado
+      };
+    }),
+  );
   } 
   // Obtener todos los Productos
   @Get()
@@ -21,27 +36,46 @@ export class ProductController {
   }
 
   // Obtener Producto por nombre de usuario (equivalente a GetByUser)
-  @Get(':username')
-  findByUsername(@Param('username') username: string): Observable<any> {
-    return this._clientProxyProduct.send(ProductMSG.FIND_BY_USERNAME, username);
+  @Post('findByID')
+  findProductByID(@Body() body: { id: string }): Observable<any> {
+    return this._clientProxyProduct.send(ProductMSG.GET_PRODUCT, body.id).pipe(
+      map((response) => {
+        // decodificar "data" que está en base64
+        const decodedData = Buffer.from(response.data, 'base64').toString('utf-8');
+        
+        // parsea la data decodificada de nuevo a un objeto JSON
+        const product = JSON.parse(decodedData);
+
+        return {
+          success: response.success,
+          message: response.message,
+          data: product, // El objeto del producto ya decodificado
+        };
+      }),
+    );
   }
 
   // Actualizar un Producto
-  @Put(':productoIngresado')
+  @Put()
   update(
-    @Param('productoIngresado') productoIngresado: string, 
-    @Body() updateDTO: { newnameProduct: string }
+    @Body() updateDTO: {
+      productoIngresado: string;
+      newnameProduct: string;
+      newPrice: number;
+      newStock: number;
+      newDescription: string;
+      newCategory: string;
+    }
   ): Observable<any> {
     return this._clientProxyProduct.send(ProductMSG.UPDATE_PRODUCT, {
-      productoIngresado,
-      newnameProduct: updateDTO.newnameProduct
+      updateDTO
     });
   }
 
   // Eliminar un Producto
-  @Delete(':nameProduct')
-  delete(@Param('nameProduct') nameProduct: string): Observable<any> {
-    return this._clientProxyProduct.send(ProductMSG.DELETE_PRODUCT, nameProduct);
+  @Delete()
+  delete(@Body() productDTO: { name: string }): Observable<any> {
+    return this._clientProxyProduct.send(ProductMSG.DELETE_PRODUCT, productDTO);
   }
 
   // Crear un Usuario
