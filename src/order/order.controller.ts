@@ -4,12 +4,11 @@ import { OrderDTO } from './dto/order.dto';
 import { Observable } from 'rxjs';
 import { IOrder } from 'src/common/interfaces/order.interface';
 import { OrderMSG } from 'src/common/constants';
-import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
-@ApiTags('orders')
+
 @UseGuards(JwtAuthGuard)
-@Controller('api/v2/order')
+@Controller('order')
 export class OrderController {
   constructor(private readonly clientProxy: ClientProxyTest) {}
   private _clientProxyOrder = this.clientProxy.clientProxy("orders");
