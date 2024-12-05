@@ -9,7 +9,7 @@ export class ProductController {
 
   private _clientProxyProduct = this.clientProxy.clientProxy("product");
   private _clientProxyOrder = this.clientProxy.clientProxy("orders");
-
+  
   // Crear un Producto y enviar mensajes a ambas colas
   @Post()
   create(@Body() productDTO: { name: string }): Observable<any> {

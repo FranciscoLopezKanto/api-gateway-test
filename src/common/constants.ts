@@ -3,7 +3,6 @@ export enum RabbitMQ {
     ProductQueue = 'product',
     OrderQueue = 'orders',
   }
-  
   export enum UserMSG {
     CREATE = 'CREATE_USER',
     CREATE_ADMIN = 'create_admin',
@@ -27,7 +26,7 @@ export enum RabbitMQ {
   }
   export enum OrderMSG {
     CREATE = 'CREATE_ORDER',
-    FIND_ALL = 'FIND_ORDERs',
+    FIND_ALL_OITEMS = 'GET_ORDERITEM',
     FIND_ONE = 'FIND_ORDER',
     UPDATE = 'UPDATE_ORDER',
     DELETE = 'DELETE_ORDER',
@@ -35,5 +34,7 @@ export enum RabbitMQ {
     GET_PRODUCT = "GET_PRODUCT",
     UPDATE_PRODUCT = 'EDIT_PRODUCT',
     DELETE_PRODUCT = 'DELETE_PRODUCT',
+    CREATE_ORDER_ITEM = 'CREATE_ORDER_ITEM',
+    CREATE_USER = 'CREATE_USER',
 
   }
