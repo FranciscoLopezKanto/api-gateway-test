@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientProxyTest } from './client-proxy';
-import { UserController } from 'src/user/user.controller';
-import { UserModule } from 'src/user/user.module';
+import { UsersController } from 'src/users/users.controller';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
   providers: [ClientProxyTest],
