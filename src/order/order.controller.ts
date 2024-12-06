@@ -94,6 +94,27 @@ export class OrderController {
     );
   }
 
+  @Delete()
+  delete(@Body() orderItemDTO: { orderItemID: number }): Observable<any> {
+    // Enviar mensaje a la cola para eliminar el OrderItem
+    const deleteOrderItem$ = this._clientProxyOrder.send(OrderMSG.DELETE_ORDERITEM, orderItemDTO);
+  
+    // Procesar la respuesta y devolverla
+    return deleteOrderItem$.pipe(
+      map((response) => ({
+        success: response.success,
+        message: `OrderItem deleted successfully: ${response.message}`,
+        data: response.data, // Datos devueltos por el servicio de eliminación
+      })),
+      catchError((error) => {
+        console.error('Error deleting OrderItem:', error);
+        throw new Error('Error processing the request');
+      })
+    );
+  }
+  
+
+
   
 
 
