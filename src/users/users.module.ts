@@ -1,19 +1,24 @@
 import { Module } from '@nestjs/common';
-import { ClientGrpcProxy } from '@nestjs/microservices';
-
 import { UsersController } from './users.controller';
-import { clientProxyUsers } from '../common/proxy/grpc-proxy';
-
+import { ConfigService } from '@nestjs/config';
+import { ClientsModule, Transport } from '@nestjs/microservices';
+import { USERS_PACKAGE_NAME } from './users.pb';
 @Module({
-  controllers: [UsersController],
-  providers: [
-    {
-      provide: 'UsersServiceClient',
-      useFactory: (): ClientGrpcProxy => {
-        return clientProxyUsers();
+  imports: [
+    ClientsModule.register([
+      {
+        name: 'USERS_PACKAGE',
+        transport: Transport.GRPC,
+        options: {
+          url: 'localhost:50051', // Configura esta URL según tus necesidades
+          package: USERS_PACKAGE_NAME,
+          protoPath: 'node_modules/myprotos/protos/users.proto',
+        },
       },
-    }
+    ]),
   ],
-  exports: [],
+  controllers: [UsersController],
+  providers: [ConfigService], // Si usas variables de entorno
 })
 export class UsersModule {}
+

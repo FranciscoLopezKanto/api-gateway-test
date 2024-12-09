@@ -1,22 +1,23 @@
 import {
-    ClientGrpcProxy,
-    ClientProxyFactory,
-    Transport,
-  } from '@nestjs/microservices';
-  import * as dotenv  from 'dotenv';
-  
-  dotenv.config();
-  
-  import { USERS_PACKAGE_NAME } from '../../users/users.pb';
-  
-  export const clientProxyUsers = (): ClientGrpcProxy => {
+  ClientGrpcProxy,
+  ClientProxyFactory,
+  Transport,
+} from '@nestjs/microservices';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+
+
+export class GrpcProxyClient {
+  constructor(private readonly configService: ConfigService) {}
+
+  createClientProxyUsers(): ClientGrpcProxy {
     return ClientProxyFactory.create({
       transport: Transport.GRPC,
       options: {
-        url: "localhost:50051",
-        package: USERS_PACKAGE_NAME,
-        protoPath: 'node_modules/myprotos/protos/users.proto',
+        url: 'localhost:50051', // Usa ConfigService para obtener la URL del servidor gRPC
+        package: 'users',  
+        protoPath: 'node_modules/myprotos/protos/users.proto', // Ruta correcta al archivo .proto
       },
-    });
-  };
-  
+    }) as ClientGrpcProxy;
+  }
+}

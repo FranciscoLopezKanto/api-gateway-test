@@ -143,4 +143,4 @@ export function UsersControllerMethods() {
   };
 }
 
-export const USERS_SERVICE_NAME = "Users";
+export const USERS_SERVICE_NAME = 'Users';

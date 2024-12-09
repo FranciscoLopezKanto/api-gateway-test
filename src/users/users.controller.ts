@@ -1,49 +1,47 @@
-/* eslint-disable */
 import {
-  Inject,
   Controller,
-  Get,
+  Inject,
+  OnModuleInit,
   Post,
+  Get,
   Put,
   Delete,
-  Param,
   Body,
-  OnModuleInit,
+  Param,
   Req,
   Headers,
 } from '@nestjs/common';
-import { ClientGrpcProxy } from '@nestjs/microservices';
+import { ClientGrpc } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { Request } from 'express';
-
-import { UsersClient, USERS_SERVICE_NAME } from './users.pb';
-import type {
+import {
+  UsersClient,
+  USERS_SERVICE_NAME,
   RegisterRequest,
   RegisterResponse,
-  LoginRequest,
-  LoginResponse,
-  GetUsersRequest,
-  GetUsersResponse,
-  GetUserByIdRequest,
-  GetUserByIdResponse,
-  UpdateUserRequest,
-  UpdateUserResponse,
   DeleteUserRequest,
   DeleteUserResponse,
+  GetUserByIdRequest,
+  GetUserByIdResponse,
+  GetUsersRequest,
+  GetUsersResponse,
+  LoginRequest,
+  LoginResponse,
+  UpdateUserRequest,
+  UpdateUserResponse,
 } from './users.pb';
 
 @Controller('users')
 export class UsersController implements OnModuleInit {
-  constructor(
-    @Inject('UsersServiceClient')
-    private readonly usersServiceClient: ClientGrpcProxy,
-  ) {}
-
   private usersService: UsersClient;
+
+  constructor(
+    @Inject('USERS_PACKAGE') private readonly client: ClientGrpc,
+  ) {}
 
   onModuleInit(): void {
     this.usersService =
-      this.usersServiceClient.getService<UsersClient>(USERS_SERVICE_NAME);
+      this.client.getService<UsersClient>(USERS_SERVICE_NAME);
   }
 
   /** Registro de usuario */
